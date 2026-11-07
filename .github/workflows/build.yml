@@ -1,0 +1,53 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Version
+        id: ver
+        shell: pwsh
+        run: echo "v=1.0.${{ github.run_number }}" >> $env:GITHUB_OUTPUT
+
+      - name: Publish app
+        run: dotnet publish src/RioUninstaller/RioUninstaller.csproj -c Release -o publish -p:Version=${{ steps.ver.outputs.v }}
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Build installer
+        shell: pwsh
+        run: |
+          $iscc = Join-Path ${env:ProgramFiles(x86)} "Inno Setup 6\ISCC.exe"
+          & $iscc "/DAppVersion=${{ steps.ver.outputs.v }}" installer\RioUninstaller.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RioUninstaller-Setup
+          path: dist/RioUninstaller-Setup.exe
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.ver.outputs.v }}
+          name: Rio Uninstaller v${{ steps.ver.outputs.v }}
+          files: dist/RioUninstaller-Setup.exe
+          make_latest: true
+          body: |
+            حمّل **RioUninstaller-Setup.exe** وثبّته.
+            Download **RioUninstaller-Setup.exe** and run it.
