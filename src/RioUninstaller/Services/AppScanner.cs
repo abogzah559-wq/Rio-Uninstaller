@@ -45,6 +45,9 @@ public static class AppScanner
             catch { }
         }
 
+        // Never list Rio itself
+        list.RemoveAll(IsSelf);
+
         // Fill derived install locations after all are known
         foreach (var a in list)
             if (string.IsNullOrWhiteSpace(a.InstallLocation))
@@ -107,6 +110,16 @@ public static class AppScanner
             SizeKb = size,
             InstallDate = date,
         };
+    }
+
+    static bool IsSelf(InstalledApp a)
+    {
+        if (a.KeyName?.Contains("8C1F5B2A-4D1E-4E8B-9A57-3B6E2D1C9F40", StringComparison.OrdinalIgnoreCase) == true) return true;
+        if (string.Equals(a.Name, "Rio Uninstaller", StringComparison.OrdinalIgnoreCase)) return true;
+        var self = SafetyGuard.Normalize(AppContext.BaseDirectory);
+        if (!string.IsNullOrEmpty(a.InstallLocation) && SafetyGuard.Normalize(a.InstallLocation).Equals(self, StringComparison.OrdinalIgnoreCase)) return true;
+        var icon = PathFromCommand(a.DisplayIcon);
+        return icon != null && SafetyGuard.IsInside(icon, self);
     }
 
     /// <summary>Install folder from DisplayIcon / UninstallString when InstallLocation is missing. Never returns a protected folder.</summary>
