@@ -41,6 +41,7 @@ public partial class MainWindow : Window
         Loaded += async (_, _) =>
         {
             RoundCorners();
+            Activate(); Topmost = true; Topmost = false; Focus();
             await LoadAppsAsync();
             SearchBox.Focus();
         };
@@ -138,7 +139,7 @@ public partial class MainWindow : Window
     void UpdateCount()
     {
         int n = _view?.Cast<object>().Count() ?? 0;
-        CountText.Text = string.Format(Loc.T("Count"), n);
+        CountText.Text = string.Format(System.Globalization.CultureInfo.InvariantCulture, Loc.T("Count"), n);
         EmptyText.Visibility = n == 0 && _apps.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 

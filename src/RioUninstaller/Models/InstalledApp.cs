@@ -34,7 +34,7 @@ public sealed class InstalledApp : INotifyPropertyChanged
     public bool BackgroundDisabled { get => _bgDisabled; set { _bgDisabled = value; Raise(nameof(BackgroundDisabled)); } }
 
     public string SizeText => SizeKb <= 0 ? "" : FormatSize(SizeKb * 1024L);
-    public string DateText => InstallDate?.ToString("yyyy/MM/dd") ?? "";
+    public string DateText => InstallDate?.ToString("yyyy/MM/dd", System.Globalization.CultureInfo.InvariantCulture) ?? "";
     public string PublisherText => string.IsNullOrWhiteSpace(Publisher) ? "" : Publisher;
     public string Initial => string.IsNullOrEmpty(Name) ? "?" : Name.Substring(0, 1).ToUpperInvariant();
 

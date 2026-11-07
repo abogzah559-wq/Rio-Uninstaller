@@ -12,7 +12,7 @@
         <WindowChrome CaptionHeight="56" ResizeBorderThickness="6" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False"/>
     </WindowChrome.WindowChrome>
 
-    <Grid x:Name="Root">
+    <Grid x:Name="Root" NumberSubstitution.Substitution="European" NumberSubstitution.CultureSource="Text">
         <Grid.RowDefinitions>
             <RowDefinition Height="56"/>
             <RowDefinition Height="*"/>
@@ -27,9 +27,8 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
-                <Image FlowDirection="LeftToRight" Source="pack://application:,,,/Assets/logo256.png" Width="30" Height="30" RenderOptions.BitmapScalingMode="HighQuality"/>
-                <TextBlock Text="Rio" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" VerticalAlignment="Center" FlowDirection="LeftToRight"/>
-                <TextBlock Text=" Uninstaller" FontSize="16" Foreground="{StaticResource Muted}" VerticalAlignment="Center" FlowDirection="LeftToRight"/>
+                <Image FlowDirection="LeftToRight" Source="pack://application:,,,/Assets/logo256.png" Width="30" Height="30" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality"/>
+                <TextBlock FontSize="16" Margin="10,0,0,0" VerticalAlignment="Center" FlowDirection="LeftToRight"><Run Text="Rio" FontWeight="Bold"/><Run Text=" Uninstaller" Foreground="{StaticResource Muted}"/></TextBlock>
             </StackPanel>
 
             <Border Grid.Column="1" Width="460" Height="36" CornerRadius="10" Background="{StaticResource Panel2}"
@@ -391,7 +390,7 @@
                     </Grid>
                     <Button Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Margin="0,24,0,0" Click="SettingsClose_Click"
                             Content="{Binding [Done], Source={x:Static local:Loc.I}}"/>
-                    <TextBlock Text="Rio Uninstaller v1.0" Foreground="{StaticResource Dim}" FontSize="11" HorizontalAlignment="Center" Margin="0,14,0,0" FlowDirection="LeftToRight"/>
+                    <TextBlock Text="Rio Uninstaller v1.1" Foreground="{StaticResource Dim}" FontSize="11" HorizontalAlignment="Center" Margin="0,14,0,0" FlowDirection="LeftToRight"/>
                 </StackPanel>
             </Border>
         </Grid>
