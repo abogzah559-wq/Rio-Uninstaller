@@ -16,6 +16,8 @@ DisableProgramGroupPage=yes
 DisableDirPage=auto
 OutputDir=..\dist
 OutputBaseFilename=RioUninstaller-Setup
+WizardImageFile=img\wizard_164.bmp,img\wizard_328.bmp
+WizardSmallImageFile=img\small_55.bmp,img\small_110.bmp
 SetupIconFile=..\src\RioUninstaller\Assets\app.ico
 UninstallDisplayIcon={app}\{#AppExe}
 UninstallDisplayName={#AppName}
@@ -45,6 +47,7 @@ Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; Tasks: desktopico
 [Run]
 Filename: "{app}\{#AppExe}"; Parameters: "--register"; Flags: runhidden waituntilterminated
 Filename: "{app}\{#AppExe}"; Description: "{cm:LaunchProgram,{#AppName}}"; Flags: nowait postinstall skipifsilent shellexec
+Filename: "{app}\{#AppExe}"; Flags: nowait; Check: WizardSilent
 
 [UninstallRun]
 Filename: "{app}\{#AppExe}"; Parameters: "--unregister"; Flags: runhidden waituntilterminated; RunOnceId: "UnregTask"

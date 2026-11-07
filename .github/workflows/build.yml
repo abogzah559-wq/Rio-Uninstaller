@@ -49,5 +49,5 @@ jobs:
           files: dist/RioUninstaller-Setup.exe
           make_latest: true
           body: |
-            حمّل **RioUninstaller-Setup.exe** وثبّته.
             Download **RioUninstaller-Setup.exe** and run it.
+            Installed copies update themselves from this page automatically.

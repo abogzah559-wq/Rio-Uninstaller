@@ -104,6 +104,9 @@ public sealed class Loc : INotifyPropertyChanged
         ["English"] = ("English", "English"),
         ["Hidden"] = ("إظهار مكونات النظام", "Show system components"),
         ["OpenFolder"] = ("فتح المجلد", "Open folder"),
+        ["UpdateAvailable"] = ("توفر تحديث جديد للبرنامج — اضغط للتحديث", "New update available — click to update"),
+        ["Updating"] = ("جاري التحديث... {0}%", "Updating... {0}%"),
+        ["UpdateFailed"] = ("فشل التحديث — اضغط للمحاولة مرة ثانية", "Update failed — click to retry"),
         ["NoResults"] = ("ما فيه نتائج", "No results"),
     };
 }

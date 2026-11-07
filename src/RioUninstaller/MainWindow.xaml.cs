@@ -32,6 +32,23 @@ public partial class MainWindow : Window
     CancellationTokenSource _inspectCts;
     TaskCompletionSource<bool> _dlg;
     bool _detailsOpen;
+    Updater.Release _update;
+    bool _updating;
+
+    async void Update_Click(object sender, RoutedEventArgs e)
+    {
+        if (_update == null || _updating || _busy) return;
+        _updating = true;
+        var progress = new Progress<int>(p => UpdateText.Text = string.Format(System.Globalization.CultureInfo.InvariantCulture, Loc.T("Updating"), p));
+        UpdateText.Text = string.Format(System.Globalization.CultureInfo.InvariantCulture, Loc.T("Updating"), 0);
+        if (await Updater.InstallAsync(_update, progress))
+        {
+            Application.Current.Shutdown();
+            return;
+        }
+        UpdateText.Text = Loc.T("UpdateFailed");
+        _updating = false;
+    }
 
     public MainWindow()
     {
@@ -44,6 +61,12 @@ public partial class MainWindow : Window
             Activate(); Topmost = true; Topmost = false; Focus();
             await LoadAppsAsync();
             SearchBox.Focus();
+            _update = await Updater.CheckAsync();
+            if (_update != null)
+            {
+                UpdateText.Text = Loc.T("UpdateAvailable");
+                UpdateButton.Visibility = Visibility.Visible;
+            }
         };
         StateChanged += (_, _) =>
         {
@@ -55,6 +78,7 @@ public partial class MainWindow : Window
             if (e.Key == Key.Escape)
             {
                 if (SettingsOverlay.Visibility == Visibility.Visible) { CloseSettings(); e.Handled = true; }
+                else if (AppSheet.Visibility == Visibility.Visible) { HideSheet(); e.Handled = true; }
                 else if (Overlay.Visibility == Visibility.Visible && DlgButtons.Visibility == Visibility.Visible) { DlgCancel_Click(null, null); e.Handled = true; }
             }
         };
@@ -97,7 +121,7 @@ public partial class MainWindow : Window
         if (keepId != null)
         {
             var again = list.FirstOrDefault(a => a.Id == keepId);
-            if (again != null) AppList.SelectedItem = again; else ShowDetails(null);
+            if (again != null) { AppList.SelectedItem = again; _sel = again; } else _sel = null;
         }
 
         _ = Task.Run(() =>
@@ -105,7 +129,7 @@ public partial class MainWindow : Window
             foreach (var a in list)
             {
                 var ic = IconLoader.Load(a);
-                if (ic != null) Dispatcher.InvokeAsync(() => { a.Icon = ic; if (_sel == a) SetDetailIcon(a); });
+                if (ic != null) Dispatcher.InvokeAsync(() => { a.Icon = ic; if (_sel == a && AppSheet.Visibility == Visibility.Visible) SetDetailIcon(a); });
             }
         });
     }
@@ -156,12 +180,28 @@ public partial class MainWindow : Window
 
     async void Refresh_Click(object sender, RoutedEventArgs e) => await LoadAppsAsync();
 
-    void AppList_SelectionChanged(object sender, SelectionChangedEventArgs e) => ShowDetails(AppList.SelectedItem as InstalledApp);
+    void AppList_SelectionChanged(object sender, SelectionChangedEventArgs e) => _sel = AppList.SelectedItem as InstalledApp;
+
+    void AppList_ItemClick(object sender, MouseButtonEventArgs e)
+    {
+        if (ItemsControl.ContainerFromElement(AppList, e.OriginalSource as DependencyObject) is ListBoxItem item
+            && item.DataContext is InstalledApp a)
+        {
+            AppList.SelectedItem = a;
+            ShowDetails(a);
+        }
+    }
+
+    void AppSheet_MouseDown(object sender, MouseButtonEventArgs e) => HideSheet();
+    void SheetCard_MouseDown(object sender, MouseButtonEventArgs e) => e.Handled = true;
+    void SheetClose_Click(object sender, RoutedEventArgs e) => HideSheet();
+    void HideSheet() { _inspectCts?.Cancel(); AppSheet.Visibility = Visibility.Collapsed; AppList.Focus(); }
 
     void AppList_MouseDoubleClick(object sender, MouseButtonEventArgs e) { }
 
     async void AppList_KeyDown(object sender, KeyEventArgs e)
     {
+        if (e.Key == Key.Enter && _sel != null) { e.Handled = true; ShowDetails(_sel); return; }
         if (e.Key == Key.Delete && _sel != null)
         {
             e.Handled = true;
@@ -176,14 +216,8 @@ public partial class MainWindow : Window
         _sel = a;
         _inspectCts?.Cancel();
         Chips.Children.Clear();
-        if (a == null)
-        {
-            Details.Visibility = Visibility.Collapsed;
-            Placeholder.Visibility = Visibility.Visible;
-            return;
-        }
-        Placeholder.Visibility = Visibility.Collapsed;
-        Details.Visibility = Visibility.Visible;
+        if (a == null) { AppSheet.Visibility = Visibility.Collapsed; return; }
+        AppSheet.Visibility = Visibility.Visible;
         Details.ScrollToTop();
 
         DetName.Text = a.Name;
@@ -258,6 +292,7 @@ public partial class MainWindow : Window
     {
         var app = _sel;
         if (app == null || _busy) return;
+        HideSheet();
         bool full = mode == UninstallMode.Full;
         var ok = await ConfirmAsync(Loc.T(full ? "FullTitle" : "NormalTitle"),
             string.Format(Loc.T(full ? "ConfirmFull" : "ConfirmNormal"), app.Name),
@@ -300,6 +335,7 @@ public partial class MainWindow : Window
         var app = _sel;
         if (app == null || _busy) return;
         bool restore = app.BackgroundDisabled;
+        HideSheet();
         if (!restore)
         {
             if (!await ConfirmAsync(Loc.T("BgTitle"), string.Format(Loc.T("ConfirmBg"), app.Name), Loc.T("BgTitle"), false, app)) return;
@@ -317,7 +353,7 @@ public partial class MainWindow : Window
             ShowResult(string.Format(Loc.T(restore ? "ResultBgRestore" : "ResultBg"), app.Name), stats, true, r.Details);
             await _dlg.Task;
             HideOverlay();
-            if (_sel == app) ShowDetails(app);
+            ShowDetails(app);
         }
         finally { _busy = false; }
     }
@@ -465,7 +501,8 @@ public partial class MainWindow : Window
         LangLabel.Text = ar ? "EN" : "ع";
         UpdateCount();
         UpdateBgButton();
-        if (_sel != null) ShowDetails(_sel);
+        if (_sel != null && AppSheet.Visibility == Visibility.Visible) ShowDetails(_sel);
+        if (_update != null) UpdateText.Text = Loc.T("UpdateAvailable");
     }
 
     void SettingsClose_Click(object sender, RoutedEventArgs e) => CloseSettings();

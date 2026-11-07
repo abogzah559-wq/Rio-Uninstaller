@@ -1,34 +1,30 @@
 <p align="center"><img src="docs/logo.png" width="140"></p>
 <h1 align="center">Rio Uninstaller</h1>
-<p align="center">مزيل برامج سريع وبسيط لويندوز — واجهة سوداء حديثة، عربي وإنجليزي</p>
+<p align="center">A fast, simple uninstaller for Windows with a modern dark UI (Arabic / English).</p>
 
-## التحميل
-من صفحة **Releases** حمّل `RioUninstaller-Setup.exe` وثبّته.
+## Download
+Get `RioUninstaller-Setup.exe` from the **Releases** page and run it.
+Installed copies check this repository for new releases and show an update button when one is available.
 
-## وش يسوي
-اختر البرنامج من القائمة، وبعدها ضغطة وحدة:
+## Features
+Click a program, then pick one action:
 
-| الزر | وش يسوي |
+| Action | What it does |
 |---|---|
-| **حذف عادي** (الافتراضي) | يقفل البرنامج، يشغّل مزيله بصمت، ويحذف ملفاته واختصاراته وخدماته ومهامه وتشغيله التلقائي ومفاتيح التسجيل الخاصة بالتثبيت — **ويبقي إعداداتك وبياناتك** (AppData / ProgramData / إعدادات الريجستري) عشان لو رجعت نزلته يرجع مثل ما كان |
-| **حذف كامل** | نفس اللي فوق + يمسح كل بيانات وإعدادات البرنامج: مجلدات AppData و LocalLow و ProgramData و Temp ومفاتيح `HKCU/HKLM\Software\<البرنامج>` — كأنك ما نزلته أبد. يغني عن الفحص المتقدم وتحديد العناصر العريضة يدوياً |
-| **إيقاف الخلفية** | يقفل كل عمليات البرنامج ويعطّل خدماته وتشغيله التلقائي ومهامه المجدولة **بدون حذف أي شيء** — وتقدر ترجعها بزر "إعادة تفعيل الخلفية" |
+| **Standard uninstall** (default) | Closes the program, runs its uninstaller silently, then removes its program files, shortcuts, services, scheduled tasks, startup entries and install registry keys — **keeps your settings and data** (AppData / ProgramData / settings keys), so reinstalling brings everything back. |
+| **Complete wipe** | Everything above, plus all of the program's data and settings: AppData, LocalLow, ProgramData, Temp folders and `HKCU/HKLM\Software\<Program>` keys — as if it was never installed. One click, no manual leftover selection. |
+| **Stop background** | Kills the program's processes and disables its services, startup entries and scheduled tasks **without deleting anything**. Reversible with "Re-enable background". |
 
-اختصارات: `Delete` = حذف عادي، `Shift+Delete` = حذف كامل.
+Shortcuts: `Enter` opens the selected program, `Delete` = standard uninstall, `Shift+Delete` = complete wipe.
 
-## الأمان
-- يحذف فقط الأشياء اللي اسمها يطابق البرنامج بالضبط أو اللي تشير لمجلد البرنامج نفسه.
-- مجلدات النظام والمستخدم (Windows، Program Files، AppData، Documents…) ومجلدات الناشرين المشتركة ما تنحذف أبداً.
-- أي مجلد فيه برنامج ثاني مثبّت ما ينلمس.
-- مفاتيح الريجستري الحساسة (Microsoft، Classes، Policies، SYSTEM) محمية.
+## Safety
+- Only removes items whose name exactly matches the program, or that point into the program's own folder.
+- System and user folders (Windows, Program Files, AppData roots, Documents…) and shared publisher folders are never deleted.
+- Any folder that contains another installed program is left alone.
+- Sensitive registry areas (Microsoft, Classes, Policies, SYSTEM) are protected.
 
----
+## No UAC prompt on every launch
+The installer registers a scheduled task that starts Rio with admin rights, so Windows only asks once.
 
-## English
-Fast, simple uninstaller for Windows with a modern dark UI (Arabic / English).
-
-- **Standard uninstall** (default): closes the app, runs its uninstaller silently, removes program files, shortcuts, services, tasks, startup entries — **keeps your settings & data**.
-- **Complete wipe**: everything above plus all data/settings folders and registry keys — as if it was never installed.
-- **Stop background**: kills its processes and disables its services, startup entries and scheduled tasks without deleting anything (reversible).
-
-Built with .NET 8 / WPF. The installer is built by GitHub Actions on every push.
+## Build
+.NET 8 / WPF. GitHub Actions builds the app and the Inno Setup installer on every push to `main` and publishes a release.
