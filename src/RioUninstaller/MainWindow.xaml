@@ -31,7 +31,7 @@
                 <TextBlock FontSize="16" Margin="10,0,0,0" VerticalAlignment="Center" FlowDirection="LeftToRight"><Run Text="Rio" FontWeight="Bold"/><Run Text=" Uninstaller" Foreground="{StaticResource Muted}"/></TextBlock>
             </StackPanel>
 
-            <Border Grid.Column="1" Width="460" Height="36" CornerRadius="10" Background="{StaticResource Panel2}"
+            <Border Grid.Column="1" MaxWidth="460" Margin="16,0" Height="36" CornerRadius="10" Background="{StaticResource Panel2}"
                     BorderBrush="{StaticResource Line}" BorderThickness="1" WindowChrome.IsHitTestVisibleInChrome="True">
                 <Grid Margin="12,0">
                     <Grid.ColumnDefinitions>
@@ -52,6 +52,41 @@
                         <TextBlock Text="&#xE896;" FontFamily="{StaticResource Icons}" FontSize="12" Foreground="#FF9F1A" VerticalAlignment="Center"/>
                         <TextBlock x:Name="UpdateText" Foreground="#FF9F1A" FontWeight="SemiBold" FontSize="12.5" Margin="8,0,0,0" VerticalAlignment="Center"/>
                     </StackPanel>
+                </Button>
+                <Button x:Name="CoffeeButton" Click="Coffee_Click" Cursor="Hand" Margin="0,0,8,0" VerticalAlignment="Center"
+                        ToolTip="{Binding [Coffee], Source={x:Static local:Loc.I}}">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="b" Height="30" CornerRadius="15" Padding="12,0" BorderThickness="1" BorderBrush="#6BFF6AA9" Background="#12FF4F9A">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Viewbox Width="16" Height="16" FlowDirection="LeftToRight" VerticalAlignment="Center">
+                                        <Canvas Width="24" Height="24">
+                                            <Path x:Name="cup" Stroke="#FF6AA9" StrokeThickness="1.9" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                                  Data="M4,9 h12 v5 a5,5 0 0 1 -5,5 H9 a5,5 0 0 1 -5,-5 z M16,10.5 h1.5 a2.5,2.5 0 0 1 0,5 H16 M8,3.5 c-0.8,1 0.8,2 0,3 M12,3.5 c-0.8,1 0.8,2 0,3"/>
+                                        </Canvas>
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding [Coffee], Source={x:Static local:Loc.I}}" Foreground="White" FontWeight="Bold" FontSize="12.5" Margin="7,0,0,0" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="b" Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#FF4F9A" Offset="0"/>
+                                                <GradientStop Color="#B44DFF" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter TargetName="b" Property="BorderBrush" Value="Transparent"/>
+                                    <Setter TargetName="cup" Property="Stroke" Value="White"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="b" Property="Opacity" Value="0.85"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
                 </Button>
                 <Button x:Name="LangButton" Style="{StaticResource FlatButton}" Click="Lang_Click" Padding="10,6" Margin="0,0,4,0" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal">

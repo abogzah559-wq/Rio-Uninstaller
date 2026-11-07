@@ -26,6 +26,7 @@ public sealed class Loc : INotifyPropertyChanged
     {
         ["AppTitle"] = ("Rio Uninstaller", "Rio Uninstaller"),
         ["Search"] = ("ابحث عن برنامج...", "Search programs..."),
+        ["Coffee"] = ("اشترِ لي كوب قهوة", "Buy me a coffee"),
         ["ColName"] = ("البرنامج", "Program"),
         ["Programs"] = ("البرامج", "Programs"),
         ["Count"] = ("{0} برنامج", "{0} programs"),

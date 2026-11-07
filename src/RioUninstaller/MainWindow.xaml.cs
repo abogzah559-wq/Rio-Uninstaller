@@ -512,6 +512,12 @@ public partial class MainWindow : Window
 
     // ================= window chrome =================
 
+    void Coffee_Click(object sender, RoutedEventArgs e)
+    {
+        var url = Loc.I.IsArabic ? "https://7krh-hub.pages.dev/ar/support/" : "https://7krh-hub.pages.dev/en/support/";
+        try { Process.Start(new ProcessStartInfo(url) { UseShellExecute = true }); } catch { }
+    }
+
     void Min_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
     void Max_Click(object sender, RoutedEventArgs e) => WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
     void Close_Click(object sender, RoutedEventArgs e) => Close();

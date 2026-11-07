@@ -1,6 +1,7 @@
 <p align="center"><img src="docs/logo.png" width="140"></p>
 <h1 align="center">Rio Uninstaller</h1>
 <p align="center">A fast, simple uninstaller for Windows with a modern dark UI (Arabic / English).</p>
+<p align="center"><a href="https://7krh-hub.pages.dev/en/support/">☕ Buy me a coffee</a></p>
 
 ## Download
 Get `RioUninstaller-Setup.exe` from the **Releases** page and run it.
